@@ -1,14 +1,23 @@
-const express = require('express');
+const express = require("express");
+
+const productRoutes = require("./routes/productRoutes");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok' });
+// Health check
+app.get("/api/health", (req, res) => {
+    res.json({
+        status: "ok"
+    });
 });
 
+// Product routes
+app.use("/api/products", productRoutes);
+
+const PORT = 5000;
+
 app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
