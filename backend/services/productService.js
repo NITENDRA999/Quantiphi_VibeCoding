@@ -5,37 +5,48 @@ function getFilteredProducts(filters = {}) {
         categories = [],
         minPrice,
         maxPrice,
-        minRating
+        minRating,
+        sort = ""
     } = filters;
 
+    // Start with a copy of the master inventory
     let result = [...products];
 
-    // Category filter
+    // CATEGORY FILTER
     if (categories.length > 0) {
-        result = result.filter(product =>
+        result = result.filter((product) =>
             categories.includes(product.category)
         );
     }
 
-    // Minimum price filter
+    // MINIMUM PRICE FILTER
     if (minPrice !== undefined && minPrice !== null) {
-        result = result.filter(product =>
-            product.price >= minPrice
+        result = result.filter(
+            (product) => product.price >= minPrice
         );
     }
 
-    // Maximum price filter
+    // MAXIMUM PRICE FILTER
     if (maxPrice !== undefined && maxPrice !== null) {
-        result = result.filter(product =>
-            product.price <= maxPrice
+        result = result.filter(
+            (product) => product.price <= maxPrice
         );
     }
 
-    // Minimum rating filter
+    // MINIMUM RATING FILTER
     if (minRating !== undefined && minRating !== null) {
-        result = result.filter(product =>
-            product.rating >= minRating
+        result = result.filter(
+            (product) => product.rating >= minRating
         );
+    }
+
+    // SORT ONLY AFTER FILTERING
+    if (sort === "price_asc") {
+        result.sort((a, b) => a.price - b.price);
+    }
+
+    if (sort === "rating_desc") {
+        result.sort((a, b) => b.rating - a.rating);
     }
 
     return result;
