@@ -1,30 +1,35 @@
 function ProductCard({ product }) {
     return (
-        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md">
+        <div className="product-card">
+
             <img
                 src={product.image}
                 alt={product.name}
-                className="h-52 w-full object-cover"
+                className="product-image"
             />
 
-            <div className="p-5">
-                <h3 className="mb-2 text-lg font-semibold text-gray-900">
+            <div className="product-info">
+
+                <h3 className="product-name">
                     {product.name}
                 </h3>
 
-                <p className="mb-3 text-sm text-gray-500">
+                <p className="product-category">
                     {product.category}
                 </p>
 
-                <div className="flex items-center justify-between">
-                    <span className="text-lg font-bold text-gray-900">
+                <div className="product-details">
+
+                    <span className="product-price">
                         ₹{product.price}
                     </span>
 
-                    <span className="font-medium text-yellow-500">
+                    <span className="product-rating">
                         ★ {product.rating}
                     </span>
+
                 </div>
+
             </div>
         </div>
     );

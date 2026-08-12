@@ -10,6 +10,10 @@ function FilterSidebar({
     setMinRating,
     onReset
 }) {
+    const MIN = 0;
+    const MAX = 5000;
+    const STEP = 100;
+
     const handleCategoryChange = (category) => {
         setSelectedCategories((current) =>
             current.includes(category)
@@ -18,128 +22,139 @@ function FilterSidebar({
         );
     };
 
+    const handleMinPriceChange = (event) => {
+        const value = Number(event.target.value);
+
+        if (value <= maxPrice) {
+            setMinPrice(value);
+        }
+    };
+
+    const handleMaxPriceChange = (event) => {
+        const value = Number(event.target.value);
+
+        if (value >= minPrice) {
+            setMaxPrice(value);
+        }
+    };
+
+    const minPercent = ((minPrice - MIN) / (MAX - MIN)) * 100;
+    const maxPercent = ((maxPrice - MIN) / (MAX - MIN)) * 100;
+
     return (
-        <aside className="sticky top-6 h-fit rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-gray-900">
-                    Filters
-                </h2>
+        <aside className="filter-sidebar">
+
+            {/* Header */}
+            <div className="filter-header">
+                <h2>Filters</h2>
 
                 <button
+                    type="button"
                     onClick={onReset}
-                    className="text-sm font-medium text-blue-600 hover:text-blue-800"
+                    className="reset-link"
                 >
                     Reset
                 </button>
             </div>
 
             {/* Category */}
-            <div className="mb-8">
-                <h3 className="mb-4 font-semibold text-gray-800">
-                    Category
-                </h3>
+            <div className="filter-section">
+                <h3>Category</h3>
 
-                <div className="space-y-3">
-                    {categories.map((category) => (
-                        <label
-                            key={category}
-                            className="flex cursor-pointer items-center gap-3 text-sm text-gray-700"
-                        >
-                            <input
-                                type="checkbox"
-                                checked={selectedCategories.includes(category)}
-                                onChange={() => handleCategoryChange(category)}
-                                className="h-4 w-4 rounded border-gray-300"
-                            />
+                {categories.map((category) => (
+                    <label
+                        key={category}
+                        className="checkbox-item"
+                    >
+                        <input
+                            type="checkbox"
+                            checked={selectedCategories.includes(category)}
+                            onChange={() =>
+                                handleCategoryChange(category)
+                            }
+                        />
 
-                            {category}
-                        </label>
-                    ))}
-                </div>
+                        <span>{category}</span>
+                    </label>
+                ))}
             </div>
 
             {/* Price Range */}
-            <div className="mb-8">
-                <h3 className="mb-4 font-semibold text-gray-800">
-                    Price Range
-                </h3>
+            <div className="filter-section">
+                <h3>Price Range</h3>
 
-                <div className="mb-4 flex justify-between text-sm font-medium text-gray-600">
+                <div className="price-values">
                     <span>₹{minPrice}</span>
                     <span>₹{maxPrice}</span>
                 </div>
 
-                <div className="space-y-4">
-                    <div>
-                        <label className="mb-2 block text-xs text-gray-500">
-                            Minimum
-                        </label>
+                <div className="dual-range">
 
-                        <input
-                            type="range"
-                            min="0"
-                            max="5000"
-                            step="100"
-                            value={minPrice}
-                            onChange={(e) => {
-                                const value = Number(e.target.value);
-                                if (value <= maxPrice) {
-                                    setMinPrice(value);
-                                }
-                            }}
-                            className="w-full"
-                        />
-                    </div>
+                    {/* Background track */}
+                    <div className="range-track"></div>
 
-                    <div>
-                        <label className="mb-2 block text-xs text-gray-500">
-                            Maximum
-                        </label>
+                    {/* Selected range */}
+                    <div
+                        className="range-progress"
+                        style={{
+                            left: `${minPercent}%`,
+                            right: `${100 - maxPercent}%`
+                        }}
+                    ></div>
 
-                        <input
-                            type="range"
-                            min="0"
-                            max="5000"
-                            step="100"
-                            value={maxPrice}
-                            onChange={(e) => {
-                                const value = Number(e.target.value);
-                                if (value >= minPrice) {
-                                    setMaxPrice(value);
-                                }
-                            }}
-                            className="w-full"
-                        />
-                    </div>
+                    {/* Minimum handle */}
+                    <input
+                        type="range"
+                        min={MIN}
+                        max={MAX}
+                        step={STEP}
+                        value={minPrice}
+                        onChange={handleMinPriceChange}
+                        className="range-input range-min"
+                        aria-label="Minimum price"
+                    />
+
+                    {/* Maximum handle */}
+                    <input
+                        type="range"
+                        min={MIN}
+                        max={MAX}
+                        step={STEP}
+                        value={maxPrice}
+                        onChange={handleMaxPriceChange}
+                        className="range-input range-max"
+                        aria-label="Maximum price"
+                    />
+                </div>
+
+                <div className="range-labels">
+                    <span>₹0</span>
+                    <span>₹5000</span>
                 </div>
             </div>
 
             {/* Rating */}
-            <div>
-                <h3 className="mb-4 font-semibold text-gray-800">
-                    Minimum Rating
-                </h3>
+            <div className="filter-section">
+                <h3>Minimum Rating</h3>
 
-                <div className="space-y-3">
-                    {[1, 2, 3, 4, 5].map((rating) => (
-                        <label
-                            key={rating}
-                            className="flex cursor-pointer items-center gap-3 text-sm text-gray-700"
-                        >
-                            <input
-                                type="radio"
-                                name="rating"
-                                value={rating}
-                                checked={minRating === rating}
-                                onChange={() => setMinRating(rating)}
-                            />
+                {[1, 2, 3, 4, 5].map((rating) => (
+                    <label
+                        key={rating}
+                        className="rating-item"
+                    >
+                        <input
+                            type="radio"
+                            name="rating"
+                            value={rating}
+                            checked={minRating === rating}
+                            onChange={() => setMinRating(rating)}
+                        />
 
-                            <span>
-                                {rating} ★ & above
-                            </span>
-                        </label>
-                    ))}
-                </div>
+                        <span>
+                            {rating} ★ & above
+                        </span>
+                    </label>
+                ))}
             </div>
         </aside>
     );
